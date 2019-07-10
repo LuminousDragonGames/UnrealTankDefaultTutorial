@@ -31,10 +31,18 @@ ATank* ATankPlayerController::GetControlledTank() const
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-    if (!GetControlledTank())
-    { return; }
-    else 
-    {
+    if (!GetControlledTank()) { return; }
 
+    FVector HitLocation; //out parameter
+    if(GetSightRayHitLocation(HitLocation)) // has "side effect", is going to line trace
+    {
+        UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
     }
+}
+
+// Get world location of line-trace through cross hair, true if it hits landscape
+bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
+{
+    OutHitLocation = FVector(1.0);
+    return true;
 }
