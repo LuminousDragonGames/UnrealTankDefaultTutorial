@@ -37,12 +37,12 @@ void ATankPlayerController::AimTowardsCrosshair()
     FVector HitLocation; //out parameter
     if(GetSightRayHitLocation(HitLocation)) // has "side effect", is going to line trace
     {
-       // UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
+       UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
     }
 }
 
 // Get world location of line-trace through cross hair, true if it hits landscape
-bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const///out removed //worried that this isnt same as Hitlocation (OutHitLocation)
 {
     //Find the crosshair position in pixel coords
     int32 ViewportSizeX, ViewPortSizeY;
@@ -54,11 +54,30 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Look direction: %s"), *LookDirection.ToString());
+        // Line-trace along that LookDirection, and see what we hit (up to max range)
+        GetLookVectorHitLocation(LookDirection, HitLocation);  ///out removed
 	}
 
-	// Line-trace along that LookDirection, and see what we hit (up to max range)
 	return true;
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+    FHitResult HitResult;
+    auto StartLocation = PlayerCameraManager->GetCameraLocation();
+    auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+    if (GetWorld()->LineTraceSingleByChannel(
+        HitResult,
+        StartLocation,
+        EndLocation,
+        ECollisionChannel::ECC_Visibility)    
+        )
+    {
+        HitLocation = HitResult.Location;
+        return true;
+    }
+    HitLocation = FVector(0);
+    return false;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
