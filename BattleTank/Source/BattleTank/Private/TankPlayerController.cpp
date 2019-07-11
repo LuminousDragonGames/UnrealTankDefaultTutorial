@@ -37,12 +37,12 @@ void ATankPlayerController::AimTowardsCrosshair()
     FVector HitLocation; //out parameter
     if(GetSightRayHitLocation(HitLocation)) // has "side effect", is going to line trace
     {
-       UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
+       GetControlledTank()->AimAt(HitLocation);
     }
 }
 
 // Get world location of line-trace through cross hair, true if it hits landscape
-bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const///out removed //worried that this isnt same as Hitlocation (OutHitLocation)
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
     //Find the crosshair position in pixel coords
     int32 ViewportSizeX, ViewPortSizeY;
