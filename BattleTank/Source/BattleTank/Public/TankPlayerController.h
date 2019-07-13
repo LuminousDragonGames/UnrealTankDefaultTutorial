@@ -8,6 +8,8 @@
 //Must be last include
 #include "TankPlayerController.generated.h"
 
+
+class ATank;
 /**
  * 
  */
