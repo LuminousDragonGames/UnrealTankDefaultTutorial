@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
 class UTankarrel; // Forward Declaration
 class UTankAimingComponent;
+class UTankMovementomponent ;
 class AProjectile;
 
 UCLASS()
@@ -36,6 +37,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* TankAimingComponent = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* TankMovementComponent = nullptr;
 
 private:	
 	// Called to bind functionality to input
